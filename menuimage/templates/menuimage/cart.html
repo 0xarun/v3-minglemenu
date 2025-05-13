@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - {{ store.store_name }}</title>
+    <link rel="stylesheet" href="/static/cart.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Your Shopping Cart for {{ store.store_name }}</h1>
+        {% if cart_items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td data-label="Item">{{ item.item_name }}</td>
+                        <td data-label="Price">${{ item.price }}</td>
+                        <td data-label="Quantity">
+                            <form method="post" action="{% url 'update_cart' store_id=store.store_id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="item_id" value="{{ item.id }}">
+                                <button class="quantity-btn" type="submit" name="action" value="increase">+</button>
+                                <button class="quantity-btn" type="submit" name="action" value="decrease">-</button>
+                            </form>
+                        </td>
+                        <td data-label="Total">${{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p class="total">Total: ${{ total }}</p>
+
+            <h2>Customer Information</h2>
+            <form id="orderForm" method="post" action="{% url 'place_order' store_id=store.store_id %}">
+                {% csrf_token %}
+                <div>
+                    <label for="full_name">Full Name:</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
+                <div>
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="tel" id="phone_number" name="phone_number" required>
+                </div>
+                <div>
+                    <label for="order_type">Order Type:</label>
+                    <select id="order_type" name="order_type" required>
+                        <option value="dine_in">Dine-In</option>
+                        <option value="takeaway">Takeaway</option>
+                        <option value="delivery">Home Delivery</option>
+                    </select>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="payment_method" value="cash" required>
+                        Pay On Shop
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="payment_method" value="upi" required>
+                        Pay Using UPI
+                    </label>
+                </div>
+                <button type="submit">Place Order</button>
+            </form>
+        </div>
+        {% else %}
+            <p>Your cart is empty.</p>
+        {% endif %}
+        <a class="continue-shopping" href="{% url 'store_page' store_id=store.store_id %}">Continue Shopping</a>
+    </div>
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            var paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+            if (paymentMethod === 'upi') {
+                e.preventDefault();
+                var formData = new FormData(this);
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        // Handle errors if any
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

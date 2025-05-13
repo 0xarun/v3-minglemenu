@@ -1,0 +1,294 @@
+:root {
+    --primary-color: #4c241d; /* Dark Brown */
+    --secondary-color: #ebb605; /* Yellow */
+    --background-color: #fff9e6; /* Light Yellowish */
+    --text-color: #4c241d; /* Dark Brown */
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Baloo 2', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    flex-grow: 1;
+    text-align: center;
+}
+
+header {
+    background-color: var(--white);
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+#logo-text {
+    font-family: "Doppio One", sans-serif;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+#logo-text span {
+    color: var(--secondary-color);
+}
+
+.logo {
+    max-width: 180px;
+    height: auto;
+    display: inline-block;
+    text-align: center;
+    margin: 10px 0;
+}
+
+h1, h2 {
+    font-family: "Doppio One", sans-serif;
+    color: var(--primary-color);
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.button:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.google-signin {
+    background-color: var(--white);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.google-signin:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.google-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.create-store-wrapper {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.create-store-form {
+    margin-bottom: 20px;
+}
+
+.create-store-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.create-store-form input[type="text"],
+.create-store-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.create-store-form input[type="submit"] {
+    width: 100%;
+}
+
+.or-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.or-separator::before,
+.or-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.or-separator span {
+    padding: 0 10px;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.manual-menu-container {
+    text-align: center;
+}
+
+.create-manual-menu {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    display: inline-block;
+    width: auto;
+    padding: 12px 24px;
+}
+
+.create-manual-menu:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.logout {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.logout button {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: bold;
+}
+
+.logout button:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.messages {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+
+footer {
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .logo {
+        max-width: 180px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .google-signin {
+        width: 100%;
+    }
+
+    .button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .logout button {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #logo-text {
+        font-size: 1.25rem;
+    }
+
+    .logo {
+        max-width: 150px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    .google-signin {
+        width: 80%;
+        margin: 0 auto;
+    }
+
+    .button {
+        width: 80%;
+        text-align: center;
+    }
+
+    .logout button {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingleMenu</title>
+    <link rel="stylesheet" href="../../static/createmenu.css">
+</head>
+<body>
+    <div class="main-container">
+        <form method="post">
+            {% csrf_token %}
+            <div class="store-name">
+                <label for="{{ form.store_name.id_for_label }}">Store Name:</label>
+                {{ form.store_name }}
+            </div>
+            
+            <div class="items-price">
+                <h3>Menu Items</h3>
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="item-price-pair">
+                        {{ form.item_name }}
+                        {{ form.item_price }}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <button type="button" id="add-more" class="rectangle-3">Add More</button>
+            <button type="submit" class="rectangle-3">Save</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('add-more').addEventListener('click', function() {
+            var formCount = parseInt(document.getElementById('id_form-TOTAL_FORMS').value);
+            var newForm = document.querySelector('.item-price-pair').cloneNode(true);
+            newForm.innerHTML = newForm.innerHTML.replace(/form-0/g, 'form-' + formCount);
+            document.querySelector('.items-price').appendChild(newForm);
+            document.getElementById('id_form-TOTAL_FORMS').value = formCount + 1;
+        });
+    </script>
+</body>
+</html>

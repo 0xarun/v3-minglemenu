@@ -1,0 +1,176 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .management-section {
+            margin-bottom: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .item-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .item-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        input[type="text"], input[type="number"], input[type="datetime-local"], textarea {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Manage {{ store.store_name }}</h1>
+
+        <div class="management-section">
+            <h2>Offers</h2>
+            <div id="offers-list">
+                {% for offer in offers %}
+                    <div class="item-card" id="offer-{{ offer.id }}">
+                        <h3>{{ offer.title }}</h3>
+                        <p>{{ offer.description }}</p>
+                        <p>Start: {{ offer.start_date }} | End: {{ offer.end_date }}</p>
+                        <p>Status: {{ offer.is_active|yesno:"Active,Inactive" }}</p>
+                        <button onclick="editItem('offer', {{ offer.id }})">Edit</button>
+                        <button onclick="deleteItem('offer', {{ offer.id }})">Delete</button>
+                    </div>
+                {% empty %}
+                    <p>No offers created yet.</p>
+                {% endfor %}
+            </div>
+            <button onclick="showForm('offer')">Add New Offer</button>
+            <div id="offer-form" style="display: none;">
+                <form id="offerForm">
+                    {% csrf_token %}
+                    {{ offer_form.as_p }}
+                    <button type="submit">Save Offer</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="management-section">
+            <h2>Advertisements</h2>
+            <div id="ads-list">
+                {% for ad in advertisements %}
+                    <div class="item-card" id="ad-{{ ad.id }}">
+                        <h3>{{ ad.title }}</h3>
+                        <p>{{ ad.content }}</p>
+                        {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width: 200px;">
+                        {% endif %}
+                        <p>Status: {{ ad.is_active|yesno:"Active,Inactive" }}</p>
+                        <button onclick="editItem('ad', {{ ad.id }})">Edit</button>
+                        <button onclick="deleteItem('ad', {{ ad.id }})">Delete</button>
+                    </div>
+                {% empty %}
+                    <p>No advertisements created yet.</p>
+                {% endfor %}
+            </div>
+            <button onclick="showForm('ad')">Add New Advertisement</button>
+            <div id="ad-form" style="display: none;">
+                <form id="adForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ ad_form.as_p }}
+                    <img id="adImagePreview" style="display: none; max-width: 200px; margin-top: 10px;">
+                    <button type="submit">Save Advertisement</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="management-section">
+            <h2>Coupon Codes</h2>
+            <div id="coupons-list">
+                {% for coupon in coupons %}
+                    <div class="item-card" id="coupon-{{ coupon.id }}">
+                        <h3>{{ coupon.code }}</h3>
+                        <p>Discount: {{ coupon.discount_percentage }}%</p>
+                        <p>Expiry: {{ coupon.expiry_date }}</p>
+                        <p>Status: {{ coupon.is_active|yesno:"Active,Inactive" }}</p>
+                        <button onclick="editItem('coupon', {{ coupon.id }})">Edit</button>
+                        <button onclick="deleteItem('coupon', {{ coupon.id }})">Delete</button>
+                    </div>
+                {% empty %}
+                    <p>No coupon codes created yet.</p>
+                {% endfor %}
+            </div>
+            <button onclick="showForm('coupon')">Add New Coupon</button>
+            <div id="coupon-form" style="display: none;">
+                <form id="couponForm">
+                    {% csrf_token %}
+                    {{ coupon_form.as_p }}
+                    <button type="submit">Save Coupon</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const storeId = '{{ store.store_id }}';
+    </script>
+    <script src="../../static/manage-store.js"></script>
+</body>
+</html>

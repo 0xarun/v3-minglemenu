@@ -1,0 +1,23 @@
+<!-- templates/menu_app/image_recognition_page.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Recognition Results</title>
+</head>
+<body>
+    <h1>Image Recognition Results</h1>
+    <!-- Display extracted text from the image -->
+    {% for line in extracted_text %}
+        <p>{{ line }}</p>
+    {% endfor %}
+
+    <!-- Add a form for the user to provide their store name -->
+
+    <!-- Add a link to edit the text -->
+    <a href="{% url 'edit_confirm_view' store_name %}">Edit Text</a>
+</body>
+</html>

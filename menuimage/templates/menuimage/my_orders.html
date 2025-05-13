@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders - {{ store.store_name }}</title>
+</head>
+<body>
+    <h1>My Orders for {{ store.store_name }}</h1>
+
+<form method="get" action="{% url 'my_orders' store_id=store.store_id %}">
+    <input type="text" name="search" placeholder="Search orders..." value="{{ search_query }}">
+    <select name="sort_by">
+        <option value="-created_at" {% if sort_by == '-created_at' %}selected{% endif %}>Newest First</option>
+        <option value="created_at" {% if sort_by == 'created_at' %}selected{% endif %}>Oldest First</option>
+        <option value="-total_price" {% if sort_by == '-total_price' %}selected{% endif %}>Highest Price</option>
+        <option value="total_price" {% if sort_by == 'total_price' %}selected{% endif %}>Lowest Price</option>
+    </select>
+    <select name="order_type">
+        <option value="">All Order Types</option>
+        {% for value, label in Order.ORDER_TYPE_CHOICES %}
+            <option value="{{ value }}" {% if order_type == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <select name="payment_method">
+        <option value="">All Payment Methods</option>
+        {% for value, label in Order.PAYMENT_METHOD_CHOICES %}
+            <option value="{{ value }}" {% if payment_method == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Apply Filters</button>
+</form>
+
+{% for order in page_obj %}
+    <div class="order-item">
+        <h3>Order #{{ order.id }}</h3>
+        <p>Customer: {{ order.customer_name }}</p>
+        <p>Phone: {{ order.customer_phone }}</p>
+        <p>Order Type: {{ order.get_order_type_display }}</p>
+        <p>Payment Method: {{ order.get_payment_method_display }}</p>
+        <p>Total Price: ${{ order.total_price }}</p>
+        <p>Date: {{ order.created_at }}</p>
+    </div>
+{% empty %}
+    <p>No orders found.</p>
+{% endfor %}
+
+
+
+{% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&order_type={{ order_type }}&payment_method={{ payment_method }}">Previous</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <strong>{{ num }}</strong>
+            {% else %}
+                <a href="?page={{ num }}&search={{ search_query }}&sort_by={{ sort_by }}&order_type={{ order_type }}&payment_method={{ payment_method }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&sort_by={{ sort_by }}&order_type={{ order_type }}&payment_method={{ payment_method }}">Next</a>
+        {% endif %}
+{% endif %}
+    </div>
+</body>
+</html>

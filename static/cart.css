@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Doppio+One&family=Baloo+2:wght@400;500;600;700&display=swap');
+
+:root {
+    --background-color: #fff9e6;
+    --primary-color: #4c241d;
+    --secondary-color: #ebb605;
+    --white: #ffffff;
+    --light-text: #7d5b55;
+}
+
+body {
+    font-family: 'Baloo 2', sans-serif;
+    background-image: url('/static/images/createmenubgimage.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--light-text);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(76, 36, 29, 0.1);
+}
+
+h1 {
+    font-family: 'Doppio One', sans-serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+th {
+    font-family: 'Doppio One', sans-serif;
+    text-align: left;
+    padding: 10px;
+    font-size: 1.2rem;
+    color: var(--white);
+    background-color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(76, 36, 29, 0.1);
+    vertical-align: middle;
+    color: var(--light-text);
+}
+
+/* Item name */
+td:first-child {
+    font-family: 'Doppio One', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* Price */
+td:nth-child(2) {
+    font-weight: 400;
+}
+
+/* Quantity controls */
+td:nth-child(3) {
+    padding: 10px 15px;
+}
+
+td:nth-child(3) form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.quantity-btn {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.total {
+    font-family: 'Doppio One', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    text-align: right;
+    padding: 15px 0;
+    border-top: 2px solid var(--primary-color);
+    margin-top: 15px;
+}
+
+
+/* Buttons */
+.place-order {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.place-order:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.continue-shopping {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border: 2px solid var(--primary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.continue-shopping:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+/* Empty cart message */
+.empty-cart {
+    font-size: 1.4rem;
+    color: var(--light-text);
+    margin: 3rem 0;
+    text-align: center;
+}
+/* Responsive styling */
+@media (max-width: 768px) {
+    body {
+        background-attachment: scroll;
+        background-position: fixed;
+        padding: 10px;
+    }
+
+    .container {
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    table, thead, tbody, tr, th, td {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border-bottom: 2px solid rgba(76, 36, 29, 0.1);
+    }
+
+    td {
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+        border-bottom: none;
+    }
+
+    td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        font-family: 'Doppio One', sans-serif;
+    }
+
+    td:nth-child(3) {
+        padding-left: 15px;
+    }
+
+    td:nth-child(3):before {
+        display: none;
+    }
+
+    td:nth-child(3) form {
+        justify-content: flex-end;
+    }
+
+    .place-order {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+    .continue-shopping {
+        margin: 50px;
+    }
+}

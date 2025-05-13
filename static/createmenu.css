@@ -1,0 +1,102 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("/static/images/createmenubgimage.png");
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: Arial, sans-serif;
+  min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container {
+  width: 330px;
+  height: auto;
+  min-height: 330px;
+  background: white;
+  padding: 20px;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.store-name {
+  margin-bottom: 20px;
+}
+
+.store-name label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+.rectangle-1 {
+  width: 100%;
+  height: 40px;
+  padding: 5px 10px;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  background-color: #EFF396;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.items-price {
+  margin-top: 20px;
+}
+
+.item-price-pair {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.rectangle-2-item,
+.rectangle-2-price {
+  padding: 5px 10px;
+  border: 1px solid #333333;
+  border-radius: 10px;
+  background-color: #EFF396;
+  font-size: 14px;
+}
+
+.rectangle-2-item {
+  width: 65%;
+}
+
+.rectangle-2-price {
+  width: 30%;
+}
+
+.rectangle-3 {
+  background-color: #EFF396;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  width: 80px;
+  height: 30px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#add-more {
+  display: block;
+  margin: 10px auto;
+}
+
+/* Styles for mobile */
+@media screen and (max-width: 480px) {
+  .main-container {
+    width: 90%;
+    margin: 20px auto;
+  }
+  
+  .rectangle-1,
+  .rectangle-2-item,
+  .rectangle-2-price,
+  .rectangle-3 {
+    font-size: 14px;
+  }
+}

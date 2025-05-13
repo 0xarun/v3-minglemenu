@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #444;
+        }
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+        nav a:hover {
+            background-color: #555;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mingle Menu</h1>
+    </header>
+    <nav>
+        <a href="/">Home</a>
+
+    </nav>
+    <div class="container">
+        <h2>Payment for {{ payment.store.store_name }}</h2>
+        <p>Amount: {{ payment.amount }}</p>
+        <p>UPI ID: {{ payment.upi_id }}</p>
+
+        <img src="data:image/png;base64,{{ qr_image }}" alt="Payment QR Code">
+
+        <p>Or use this link: <a href="{{ upi_link }}">Pay with UPI</a></p>
+
+        <form action="{% url 'confirm_payment' store_id=store.store_id payment_id=payment.payment_id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="full_name" value="{{ request.POST.full_name }}">
+            <input type="hidden" name="phone_number" value="{{ request.POST.phone_number }}">
+            <input type="hidden" name="order_type" value="{{ request.POST.order_type }}">
+            <button type="submit">I have paid</button>
+        </form>   
+</body>
+
+</html>

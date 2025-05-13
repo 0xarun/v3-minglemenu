@@ -1,0 +1,50 @@
+.offers-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.offer-cards {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+}
+
+.offer-card {
+    flex: 0 0 100%;
+    padding: 20px;
+    scroll-snap-align: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.coupon-card {
+    background-color: #e6f7ff;
+}
+
+.ad-card {
+    background-color: #fff0f5;
+}
+
+.offer-cards img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}

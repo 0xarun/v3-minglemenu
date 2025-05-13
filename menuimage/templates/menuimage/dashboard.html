@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ store.store_name }} Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Doppio+One&family=Baloo+2:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'dashboard.css' %}">
+    <style>
+        .manage-store-dropdown {
+            margin-bottom: 10px;
+        }
+        .dropdown-btn {
+            width: 100%;
+            text-align: left;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: none;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body data-store-id="{{ store_id }}">
+    <button id="sidebarToggle" class="btn"><i class="fas fa-bars"></i></button>
+
+    <div class="dashboard">
+        <nav class="sidebar">
+            <div class="logo">{{ store.store_name }}</div>
+            <ul>
+                <li><a href="#" class="active" data-section="overview"><i class="fas fa-home"></i> Overview</a></li>
+                <li><a href="#" data-section="menu"><i class="fas fa-utensils"></i> Menu</a></li>
+                <li><a href="#" data-section="orders"><i class="fas fa-clipboard-list"></i> Orders</a></li>
+                <li>
+                    <a href="#" data-section="manage-store"><i class="fas fa-store"></i> Manage Store</a>
+                    <ul class="submenu">
+                        <li><a href="#" data-subsection="offers"><i class="fas fa-tag"></i> Offers</a></li>
+                        <li><a href="#" data-subsection="ads"><i class="fas fa-ad"></i> Advertisements</a></li>
+                        <li><a href="#" data-subsection="coupons"><i class="fas fa-ticket-alt"></i> Coupon Codes</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" data-section="business-info"><i class="fas fa-info-circle"></i> Business Info</a></li>
+                <li><a href="#" data-section="qr-code"><i class="fas fa-qrcode"></i> QR Code</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <h1>Welcome, {{ store.owner.username }}</h1>
+                <div class="user-info">
+                    <img src="{{ profile_image_url }}" alt="Profile" class="profile-image">
+                    <span>{{ store.owner.username }}</span>
+                </div>
+            </header>
+
+            <section id="overview" class="active">
+                <div class="stats">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="stat-value">{{ total_orders }}</span>
+                        <span class="stat-label">Total Orders</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span class="stat-value">${{ total_revenue }}</span>
+                        <span class="stat-label">Revenue</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <span class="stat-value">{{ total_customers }}</span>
+                        <span class="stat-label">Customers</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="revenueChart"></canvas>
+                </div>
+            </section>
+
+            <section id="menu">
+                <h2>Menu Management</h2>
+                <button id="editMenuBtn" class="btn"><i class="fas fa-edit"></i> Edit Menu</button>
+                <button id="fixMenuBtn" class="btn"><i class="fas fa-wrench"></i> Fix Menu</button>
+                <button id="createMenuBtn" class="btn"><i class="fas fa-wrench"></i> Create Menu</button>
+                <div id="menuItems" class="menu-grid">
+                    {% for item, price in menu_items %}
+                    <div class="menu-item">
+                        <span class="item-name">{{ item }}</span>
+                        <span class="item-price">${{ price }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="editMenuForm" class="modal">
+                    <div class="modal-content">
+                        <h3>Edit Menu</h3>
+                        <form>
+                            {% csrf_token %}
+                            <div id="editMenuItems">
+                                {% for item, price in menu_items %}
+                                <div class="edit-menu-item">
+                                    <input type="text" name="items[]" value="{{ item }}">
+                                    <input type="text" name="prices[]" value="{{ price }}">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" id="addMenuItem" class="btn"><i class="fas fa-plus"></i> Add Item</button>
+                            <button type="submit" class="btn"><i class="fas fa-save"></i> Save Menu</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section id="orders">
+                <div id="orders" class="section">
+                    <h2>Orders</h2>
+                    <div class="filters">
+                        <input type="text" id="searchQuery" placeholder="Search orders...">
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="FAILED">Failed</option>
+                            <option value="EXPIRED">Expired</option>
+                        </select>
+                        <select id="orderTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="dine_in">Dine-In</option>
+                            <option value="takeaway">Takeaway</option>
+                            <option value="delivery">Delivery</option>
+                        </select>
+                        <select id="paymentMethodFilter">
+                            <option value="">All Payment Methods</option>
+                            <option value="cash">Cash</option>
+                            <option value="upi">UPI</option>
+                        </select>
+                        <select id="sortBy">
+                            <option value="-created_at">Newest First</option>
+                            <option value="created_at">Oldest First</option>
+                            <option value="-total_price">Highest Price</option>
+                            <option value="total_price">Lowest Price</option>
+                            <option value="customer_name">Customer Name (A-Z)</option>
+                            <option value="-customer_name">Customer Name (Z-A)</option>
+                        </select>
+                    </div>
+                    <div id="ordersList" class="orders-grid">
+                        {% for order in recent_orders %}
+                            <div class="order-item" data-order-id="{{ order.id }}">
+                                <div class="order-header">
+                                    <h3>Order #{{ order.store_order_id|default:'N/A' }}</h3>
+                                    <span class="status {{ order.status|lower }}">{{ order.status }}</span>
+                                </div>
+                                <div class="order-details">
+                                    <p><strong>Customer:</strong> {{ order.customer_name|default:'N/A' }} ({{ order.customer_phone|default:'N/A' }})</p>
+                                    <p><strong>Total:</strong> ${{ order.total_price|default:'0.00' }}</p>
+                                    <p><strong>Type:</strong> {{ order.order_type|default:'N/A' }}</p>
+                                    <p><strong>Payment:</strong> {{ order.payment_method|default:'N/A' }}</p>
+                                    <p><strong>Date:</strong> {{ order.created_at|date:"Y-m-d H:i:s" }}</p>
+                                </div>
+                                <div class="order-items">
+                                    <h4>Items:</h4>
+                                    <ul>
+                                    {% for item in order.items.all %}
+                                        <li>
+                                            {{ item.item_name }} - 
+                                            Quantity: {{ item.quantity }} - 
+                                            Price: ${{ item.price }} - 
+                                            Total: ${{ item.total_price }}
+                                        </li>
+                                    {% empty %}
+                                        <li>No items found for this order.</li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                                {% if order.status != 'COMPLETED' %}
+                                    <button class="confirm-payment-btn" data-order-id="{{ order.id }}">Confirm Payment</button>
+                                {% endif %}
+                            </div>
+                        {% empty %}
+                            <p>No orders found.</p>
+                        {% endfor %}
+                    </div>
+                    <div id="pagination"></div>
+                </div>
+            </section>
+
+            <section id="manage-store" class="section">
+                <h2>Manage Store</h2>
+                
+                <div id="offers-section" class="manage-subsection">
+                    <h3>Offers</h3>
+                    <button onclick="showForm('offer')">Add New Offer</button>
+                    <div id="offer-form" style="display: none;">
+                        <form id="offerForm">
+                            {% csrf_token %}
+                            {{ offer_form.as_p }}
+                            <button type="submit">Save Offer</button>
+                        </form>
+                    </div>
+                    <div id="offers-list">
+                        {% for offer in offers %}
+                            <div id="offer-{{ offer.id }}">
+                                <h4>{{ offer.title }}</h4>
+                                <p>{{ offer.description }}</p>
+                                <button onclick="editItem('offer', {{ offer.id }})">Edit</button>
+                                <button onclick="deleteItem('offer', {{ offer.id }})">Delete</button>
+                            </div>
+                        {% empty %}
+                            <p>No offers available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+                <div id="ads-section" class="manage-subsection">
+                    <h3>Advertisements</h3>
+                    <button onclick="showForm('ad')">Add New Advertisement</button>
+                    <div id="ad-form" style="display: none;">
+                        <form id="adForm" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ ad_form.as_p }}
+                            <img id="adImagePreview" style="display: none; max-width: 200px;" />
+                            <button type="submit">Save Advertisement</button>
+                        </form>
+                    </div>
+                    <div id="ads-list">
+                        {% for ad in advertisements %}
+                            <div id="ad-{{ ad.id }}">
+                                <h4>{{ ad.title }}</h4>
+                                <p>{{ ad.content }}</p>
+                                {% if ad.image %}
+                                    <img src="{{ ad.image.url }}" alt="{{ ad.title }}" style="max-width: 200px;" />
+                                {% endif %}
+                                <button onclick="editItem('ad', {{ ad.id }})">Edit</button>
+                                <button onclick="deleteItem('ad', {{ ad.id }})">Delete</button>
+                            </div>
+                        {% empty %}
+                            <p>No advertisements available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+                <div id="coupons-section" class="manage-subsection">
+                    <h3>Coupon Codes</h3>
+                    <button onclick="showForm('coupon')">Add New Coupon</button>
+                    <div id="coupon-form" style="display: none;">
+                        <form id="couponForm">
+                            {% csrf_token %}
+                            {{ coupon_form.as_p }}
+                            <button type="submit">Save Coupon</button>
+                        </form>
+                    </div>
+                    <div id="coupons-list">
+                        {% for coupon in coupons %}
+                            <div id="coupon-{{ coupon.id }}">
+                                <h4>{{ coupon.code }}</h4>
+                                <p>Discount: {{ coupon.discount_percentage }}%</p>
+                                <p>Expiry: {{ coupon.expiry_date }}</p>
+                                <button onclick="editItem('coupon', {{ coupon.id }})">Edit</button>
+                                <button onclick="deleteItem('coupon', {{ coupon.id }})">Delete</button>
+                            </div>
+                        {% empty %}
+                            <p>No coupon codes available.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            
+            <section id="business-info">
+                <div id="business-info" class="section">
+                    <h2>Business Information</h2>
+                    <form id="businessInfoForm">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" id="saveBusinessInfo">Save Information</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="qr-code">
+                <h2>Store QR Code</h2>
+                <div class="qr-code">
+                    <img src="{% url 'generate_qr' store.store_id %}" alt="Store QR Code">
+                </div>
+                <button id="generateQRBtn" class="btn"><i class="fas fa-sync"></i> Generate New QR</button>
+            </section>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+            dropdownBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+        });
+    </script>
+    <script>
+        var storeId = "{{ store.store_id }}";
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'dashboard.js' %}"></script>
+    <script src="{% static 'manage-store.js' %}"></script>
+    <script>
+        var editMenuUrl = "{{ edit_confirm_page }}";
+        var fixMenuUrl = "{{ fix_menu }}";
+        var businessInfoUrl = "{{ business_info }}";
+        var generateQrUrl = "{{ generate_qr }}";
+        window.STORE_ID = "{{ store.store_id }}";  // Replace {{ store_id }} with how you're passing the store ID from your backend
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submenuLinks = document.querySelectorAll('.submenu a');
+            const manageStoreSection = document.getElementById('manage-store');
+            const subsections = document.querySelectorAll('.manage-subsection');
+
+            // Show the first subsection by default
+            subsections[0].classList.add('active');
+
+            submenuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Get the subsection to show
+                    const subsectionId = this.getAttribute('data-subsection') + '-section';
+
+                    // Hide all subsections
+                    subsections.forEach(subsection => {
+                        subsection.classList.remove('active');
+                    });
+
+                    // Show the selected subsection
+                    document.getElementById(subsectionId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Text - {{ store_name }}</title>
+    <!-- Add some basic styles for the table -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #0066cc;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0052a3;
+        }
+
+        .add-item-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .add-item-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Text for {{ store.store_name }}</h1>
+
+    <form method="POST" action="{% url 'edit_confirm_page' store.store_id %}">
+        {% csrf_token %}
+        <table id="menuTable">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item, price in menu_items %}
+                <tr>
+                    <td><input type="text" name="items[]" value="{{ item }}" required></td>
+                    <td><input type="text" name="prices[]" value="{{ price }}"></td>
+                    <td>
+                        <button type="button" class="deleteItem">Delete</button>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <button type="button" id="addItem">Add Item</button>
+        <button type="submit">Save Menu</button>
+    </form>
+    
+    <script>
+    document.getElementById('addItem').addEventListener('click', function() {
+        var table = document.getElementById('menuTable').getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow();
+        newRow.innerHTML = `
+            <td><input type="text" name="items[]" required></td>
+            <td><input type="text" name="prices[]"></td>
+            <td><button type="button" class="deleteItem">Delete</button></td>
+        `;
+    });
+    
+    document.getElementById('menuTable').addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('deleteItem')) {
+            e.target.closest('tr').remove();
+        }
+    });
+    </script>
+</body>
+</html>

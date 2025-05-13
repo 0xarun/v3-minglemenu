@@ -1,0 +1,55 @@
+<!-- menuimage/order_success.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed Successfully - {{ store.store_name }}</title>
+    <link rel="stylesheet" href="/static/order_success.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Order Placed Successfully!</h1>
+
+        <h2>{{ store.store_name }}</h2>
+
+        {% if order %}
+            <h3>Order Details</h3>
+            <p><strong>Order ID:</strong> {{ order.store_order_id }}</p>
+            <p><strong>Customer Name:</strong> {{ order.customer_name }}</p>
+            <p><strong>Phone Number:</strong> {{ order.customer_phone }}</p>
+            <p><strong>Order Type:</strong> {{ order.get_order_type_display }}</p>
+            <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+            <p><strong>Payment Status:</strong> {{ order.get_status_display }}</p>
+            <p><strong>Total Price:</strong> ${{ order.total_price }}</p>
+
+            Order Items:
+            <table>
+                <tr>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price }}</td>
+                    <td>${{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No order details available.</p>
+        {% endif %}
+
+        <a href="{% url 'store_page' store_id=store.store_id %}">Return to Menu</a>
+
+        {% if order.status == 'PENDING' %}
+            <p>Waiting for restaurant confirmation...</p>
+        {% endif %}
+
+</body>
+</html>

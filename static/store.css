@@ -1,0 +1,259 @@
+/* General styles */
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("/static/images/storebgimage.png");
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Button styles */
+.generate-qr-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EFF396;
+  padding: 5px 12px;
+  border-radius: 10px;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+a.generate-qr-button {
+  text-decoration: none;
+  color: black;
+}
+
+.generate-qr-button svg {
+  margin-right: 5px;
+}
+
+.generate-qr-button .button-text {
+  margin: 0;
+}
+
+.message-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ccc;
+  display: none;
+  z-index: 1000;
+}
+
+.message-popup.success {
+  border-color: green;
+  color: green;
+}
+
+.message-popup.error {
+  border-color: red;
+  color: red;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  justify-content: space-between;
+}
+
+#store {
+  font-size: larger;
+  background-color: white;
+  margin: 1em;
+  padding: 5px 12px;
+  border-radius: 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.all {
+  display: flex;
+  z-index: 100;
+  column-gap: 10px;
+  padding: 20px;
+  margin: 0 10px;
+}
+
+.all button {
+  background-color: #EFF396;
+  padding: 6px 12px;
+  border-radius: 10px;
+  color: black;
+}
+
+.view-cart {
+  background-color: #EFF396;
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #000000;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+/* Grid container */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px; /* Adjusted gap for spacing between boxes */
+  padding: 10px;
+}
+
+.rectangle1 {
+  width: 85%;
+  height: auto;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px; /* Increased padding for more space inside the box */
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.rectangle1:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart {
+  background-color: #EFF396;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 8px 15px;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+  font-size: 14px;
+  display: block;
+  text-align: center;
+}
+
+.add-to-cart:hover {
+  background-color: #C6E553;
+}
+
+.item-name {
+  display: block;
+  margin: 5px 0;
+  color: #000000;
+  font-size: 18px;
+  font-weight: bold; /* Make item name bold */
+  line-height: 1.2;
+}
+
+.price {
+  display: block;
+  margin: 0;
+  color: #000000;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* Profile image */
+.nav-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.profile-image:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: black;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f1f1f1;
+  color: #000000;
+}
+
+.dropdown-menu.open {
+  display: block;
+}
+
+/* Mobile styles */
+@media only screen and (max-width: 480px) {
+  body {
+    font-size: 12px;
+  }
+
+  .grid-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px; /* Adjusted gap for spacing between boxes on mobile */
+    padding: 10px;
+  }
+
+  .rectangle1 {
+    padding: 15px; /* Increased padding for more space inside the box on mobile */
+  }
+
+  .item-name, .price {
+    font-size: 16px;
+  }
+
+  .add-to-cart {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  nav {
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+  }
+
+  .button {
+    font-size: 14px;
+    padding: 5px;
+    margin: 0;
+  }
+}
+
+/* Tablet styles */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Adjusted gap for spacing between boxes on tablets */
+  }
+}

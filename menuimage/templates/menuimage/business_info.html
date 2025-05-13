@@ -1,0 +1,28 @@
+<!-- menuimage/templates/menuimage/business_info.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Information</title>
+    <link rel="stylesheet" href="../../static/business_info.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Business Information for {{ store.store_name }}</h1>
+        <p class="edit-note">You can always edit this info later.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="primary-btn">Save and Continue</button>
+        </form>
+        
+        <form method="post" action="{% url 'delete_menu' store_id=store.store_id %}" class="delete-form">
+            {% csrf_token %}
+            <button type="submit" class="secondary-btn">Delete Menu</button>
+        </form>
+    </div>
+</body>
+</html>

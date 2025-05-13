@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/offers.css">
+</head>
+<body>
+    <div class="offers-popup">
+        <div class="offer-cards">
+            {% for offer in offers %}
+                <div class="offer-card">
+                    <h3>{{ offer.title }}</h3>
+                    <p>{{ offer.description }}</p>
+                    <p>Valid until: {{ offer.end_date }}</p>
+                </div>
+            {% endfor %}
+            {% for coupon in coupons %}
+                <div class="offer-card coupon-card">
+                    <h3>{{ coupon.code }}</h3>
+                    <p>{{ coupon.discount_percentage }}% off</p>
+                    <p>Valid until: {{ coupon.expiry_date }}</p>
+                </div>
+            {% endfor %}
+            {% for ad in advertisements %}
+                <div class="offer-card ad-card">
+                    <h3>{{ ad.title }}</h3>
+                    <p>{{ ad.content }}</p>
+                    {% if ad.image %}
+                        <img src="{{ ad.image.url }}" alt="{{ ad.title }}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const offerCards = document.querySelector('.offer-cards');
+            let startX;
+            let currentIndex = 0;
+
+            offerCards.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+            });
+
+            offerCards.addEventListener('touchmove', function(e) {
+                if (!startX) return;
+
+                const currentX = e.touches[0].clientX;
+                const diff = startX - currentX;
+
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0 && currentIndex < offerCards.children.length - 1) {
+                        currentIndex++;
+                    } else if (diff < 0 && currentIndex > 0) {
+                        currentIndex--;
+                    }
+                    offerCards.children[currentIndex].scrollIntoView({ behavior: 'smooth' });
+                    startX = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

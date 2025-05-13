@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingleMenu</title>
+    <link rel="stylesheet" href='../../static/store.css'>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Add styles for the popup message */
+        .message-popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: none;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+
+        .message-popup.success {
+            border-color: green;
+            color: green;
+        }
+
+        .message-popup.error {
+            border-color: red;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a id="store" href="/">{{ store.store_name }} Digital Menu</a>
+            <div class="all">
+                <button id="checkOffersBtn" class="btn btn-primary">Check Offers</button>
+                <div id="offersPopup" class="offers-popup" style="display: none;">
+                    {% include 'menuimage/offers_popup.html' %}
+                </div>
+                <a href="{% url 'view_cart' store_id=store.store_id %}"><button>View Cart</button></a>
+                {% if is_owner %}
+                    <a href="{% url 'my_orders' store_id=store.store_id %}">My Orders</a>
+                    <a href="{% url 'manage_store' store.store_id %}"><button>Manage Store</button></a>
+                    <a href="{% url 'fix_menu' store.store_id %}"><button>Fix Menu</button></a>
+                    <a href="{% url 'edit_confirm_page' store_id=store.store_id %}"><button>Add or Edit Menu</button></a>
+                    <form method="post" action="{% url 'delete_menu' store_id=store.store_id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Delete Menu</button>
+                    </form>
+                    <a href="{% url 'generate_qr' store_id=store.store_id %}" download="qr_code.png" >
+                        <button class="generate-qr-button"> 
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="2" width="8" height="8" fill="black"/>
+                                <rect x="14" y="2" width="8" height="8" fill="black"/>
+                                <rect x="2" y="14" width="8" height="8" fill="black"/>
+                                <rect x="14" y="14" width="3" height="3" fill="black"/>
+                                <rect x="17" y="17" width="2" height="2" fill="black"/>
+                                <rect x="14" y="20" width="8" height="2" fill="black"/>
+                                <rect x="20" y="14" width="2" height="6" fill="black"/>
+                            </svg> 
+                            <span class="button-text">Generate QR</span>
+                        </button>
+                    </a>
+                    <div class="nav-profile">
+                        {% if profile_image_url %}
+                            <img src="{{ profile_image_url }}" alt="Profile Image" class="profile-image" onclick="toggleDropdown()">
+                            <div class="dropdown-menu" id="profileDropdown"> 
+                                <a href="{% url 'business_info' store_id=store.store_id %}">Settings</a>
+                                <form class="logout" method="post" action="{% url 'account_logout' %}">
+                                    {% csrf_token %}
+                                    <a href=""><button type="submit">Logout</button></a>
+                                </form>
+                            </div>
+                        {% else %}
+                            <span>No Profile Image</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>           
+        </nav>
+    </header>
+
+    <div class="grid-container">
+        {% for item, price in menu_items %}
+            <div class="rectangle1">
+                <span class="item-name">{{ item }}</span>
+                <span class="price">{{ price }}</span>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="messagePopup" class="message-popup"></div>
+
+    <script>
+        function toggleDropdown() {
+            var dropdown = document.getElementById("profileDropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
+        $(document).ready(function() {
+            $('.add-to-cart').click(function() {
+                var item = $(this).siblings('.item-name').text().trim();
+                var price = $(this).siblings('.price').text().trim();
+                $.ajax({
+                    url: '{% url "add_to_cart" store_id=store.store_id %}',
+                    type: 'POST',
+                    data: JSON.stringify({'item_name': item, 'price': price}),
+                    contentType: 'application/json',
+                    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                    success: function(response) {
+                        showPopupMessage('Item added to cart!', 'success');
+                    },
+                    error: function(xhr, status, error) {
+                        showPopupMessage('Error adding item to cart. Please try again.', 'error');
+                    }
+                });
+            });
+
+            function showPopupMessage(message, type) {
+                var popup = $('#messagePopup');
+                popup.text(message);
+                popup.removeClass('success error');
+                popup.addClass(type);
+                popup.fadeIn(300).delay(2000).fadeOut(300);
+            }
+
+            // Close the dropdown if clicked outside of it
+            $(document).click(function(event) {
+                var target = $(event.target);
+                if (!target.closest(".nav-profile").length) {
+                    $("#profileDropdown").hide();
+                }
+            });
+        });
+        document.getElementById('checkOffersBtn').addEventListener('click', function() {
+        document.getElementById('offersPopup').style.display = 'block';
+    });
+
+    document.addEventListener('click', function(e) {
+        const popup = document.getElementById('offersPopup');
+        const btn = document.getElementById('checkOffersBtn');
+        if (e.target !== popup && !popup.contains(e.target) && e.target !== btn) {
+            popup.style.display = 'none';
+        }
+    });
+    </script>
+</body>
+</html>

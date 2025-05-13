@@ -1,0 +1,78 @@
+{% load static %}
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MingleMenu - Register to Create Store</title>
+    <meta name="description" content="Register to create your store on MingleMenu, the best platform for managing your restaurant's online presence.">
+    <meta name="keywords" content="MingleMenu, Create Store, Restaurant, Online Menu">
+    <meta name="author" content="MingleMenu">
+    <link rel="stylesheet" href="{% static 'home_style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Doppio+One&family=Baloo+2&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div id="logo-text">mingle<span>menu</span></div>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'account_logout' %}" class="logout">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="MingleMenu Logo" class="logo" loading="lazy">
+        </div>
+
+        {% if not user.is_authenticated %}
+            <h2>Register to Create Your Store</h2>
+            <a href="{% provider_login_url 'google' %}?next=/" class="button google-signin" aria-label="Continue with Google">
+                <img src="{% static 'images/google-icon.svg' %}" alt="Google Icon" class="google-icon">
+                Continue with Google
+            </a>
+        {% else %}
+            <h2>Create Your Store</h2>
+            <div class="create-store-wrapper">
+                <form method="post" action="{% url 'image_recognition_view' %}" enctype="multipart/form-data" class="create-store-form">
+                    {% csrf_token %}
+                    <label for="store_name">Store Name:</label>
+                    <input type="text" id="store_name" name="store_name" placeholder="Enter your store name" required>
+                    <label for="menu_image">Upload Menu Image:</label>
+                    <input type="file" id="menu_image" name="menu_image" accept="image/*" required>
+                    <input type="submit" value="Create Store" class="button" aria-label="Create Store">
+                </form>
+                
+                <div class="or-separator">
+                    <span>OR</span>
+                </div>
+                
+                <div class="manual-menu-container">
+                    <a href="{% url 'create_manual_menu' %}" class="button create-manual-menu" aria-label="Create Manual Menu">
+                        Create Manual Menu
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </main>
+
+
+    <footer>
+        <p>&copy; 2024 MingleMenu. All rights reserved.</p>
+    </footer>
+</body>
+</html>
