@@ -84,4 +84,4 @@ def send_whatsapp_message(phone, template_name, params):
     
 # Working URL
 
-# http://bhashsms.com/api/sendmsg.php?user=minglemenu&pass=123456&sender=BUZWAP&phone=+917826884771&text=new_temp1&priority=wa&stype=normal&Params=Drink2Way,22,Dhanush,355.70,1.+COFFEE+x+1%5Cn2.+ESPRESSO+x+1%5Cn3.+ESPRESSO+WITH+MILK+x+1%5Cn4.+RISTRETO+x+1%5Cn5.+DOPIO+x+1%5Cn6.+DOPIO+WITH+MILK+x+1%5Cn7.+MACCHIATO+x+1%5Cn8.+AMERICANO+x+1%5Cn9.+AMERICANO+WITH+MILK+x+1
+# http://bhashsms.com/api/sendmsg.php?user=minglemenu&pass=password&sender=BUZWAP&phone=+917826884771&text=new_temp1&priority=wa&stype=normal&Params=Drink2Way,22,Dhanush,355.70,1.+COFFEE+x+1%5Cn2.+ESPRESSO+x+1%5Cn3.+ESPRESSO+WITH+MILK+x+1%5Cn4.+RISTRETO+x+1%5Cn5.+DOPIO+x+1%5Cn6.+DOPIO+WITH+MILK+x+1%5Cn7.+MACCHIATO+x+1%5Cn8.+AMERICANO+x+1%5Cn9.+AMERICANO+WITH+MILK+x+1
